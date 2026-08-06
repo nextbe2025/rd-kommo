@@ -25,13 +25,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: "JSON inválido." }, { status: 400 });
     }
 
-    if (
-      !body ||
-      typeof body !== "object" ||
-      Array.isArray(body) ||
-      !("event_identifier" in body) ||
-      !("contact" in body)
-    ) {
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return NextResponse.json({ ok: true, mode: "validation" });
+    }
+
+    const record = body as Record<string, unknown>;
+    const automationRoute = request.nextUrl.searchParams.get("route")?.trim();
+    const isStandardWebhook = "event_identifier" in record && "contact" in record;
+
+    if (!isStandardWebhook && automationRoute) {
+      body = {
+        event_type: "RD_AUTOMATION",
+        entity_type: "CONTACT",
+        event_identifier: automationRoute,
+        event_timestamp: new Date().toISOString(),
+        contact: record,
+      };
+    } else if (!isStandardWebhook) {
       return NextResponse.json({ ok: true, mode: "validation" });
     }
 

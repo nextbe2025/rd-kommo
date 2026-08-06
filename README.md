@@ -26,6 +26,16 @@ Webhook local:
 POST http://localhost:3000/api/webhooks/rd?secret=SEU_SEGREDO
 ```
 
+O mesmo endpoint aceita a ação **Enviar Leads para Integração** dos Fluxos de Automação do RD. Nesse formato, informe a rota pela URL:
+
+```text
+Site:     /api/webhooks/rd?secret=SEGREDO&route=totem-site
+Leadster: /api/webhooks/rd?secret=SEGREDO&route=totem-leadster
+LP RD:    /api/webhooks/rd?secret=SEGREDO&route=totem-lp
+```
+
+Cada fluxo deve ter como critério a conversão correspondente à sua origem.
+
 Em produção, cadastre no RD a URL HTTPS fornecida pela Vercel, incluindo o segredo. O endpoint de saúde é `/api/health`.
 
 ## Implantação segura

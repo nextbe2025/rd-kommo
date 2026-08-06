@@ -12,6 +12,27 @@ const pipelineName = process.env.KOMMO_PIPELINE_NAME || "Funil Nextcard";
 const stageName = process.env.KOMMO_ENTRY_STAGE_NAME || "ETAPA DE LEADS ENTRADA";
 
 export const productRoutes: Record<string, ProductRoute> = {
+  "totem-site": {
+    product: "Totem de Autoatendimento",
+    source: "Site",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Totem", "Site"],
+  },
+  "totem-leadster": {
+    product: "Totem de Autoatendimento",
+    source: "Leadster",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Totem", "Leadster"],
+  },
+  "totem-lp": {
+    product: "Totem de Autoatendimento",
+    source: "Landing Page",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Totem", "LP"],
+  },
   "[FORM] - Totem de Autoatendimento": {
     product: "Totem de Autoatendimento",
     source: "Site",
