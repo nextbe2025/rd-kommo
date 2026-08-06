@@ -10,7 +10,7 @@ Recebe conversões do RD Station Marketing e cria ou atualiza contatos e oportun
 | `[LEADSTER] - LP Totem` | Leadster | Totem de Autoatendimento | Funil Nextcard |
 | `totem-de-autoatendimento` | Landing Page | Totem de Autoatendimento | Funil Nextcard |
 
-Etapa de entrada: `ETAPA DE LEADS DE ENTRADA`.
+Etapa de entrada: `NOVOS LEADS RD`.
 
 ## Configuração local
 

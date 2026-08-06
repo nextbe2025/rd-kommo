@@ -9,7 +9,7 @@ export type ProductRoute = {
 };
 
 const pipelineName = process.env.KOMMO_PIPELINE_NAME || "Funil Nextcard";
-const stageName = process.env.KOMMO_ENTRY_STAGE_NAME || "ETAPA DE LEADS DE ENTRADA";
+const stageName = process.env.KOMMO_ENTRY_STAGE_NAME || "NOVOS LEADS RD";
 
 export const productRoutes: Record<string, ProductRoute> = {
   "totem-geral": {
