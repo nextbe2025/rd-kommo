@@ -35,6 +35,12 @@ LP RD:    /api/webhooks/rd?secret=SEGREDO&route=totem-lp
 Geral:    /api/webhooks/rd?secret=SEGREDO&route=totem-geral
 ```
 
+Se o validador de URL do RD rejeitar parâmetros, use o formato equivalente sem query string:
+
+```text
+https://rd-kommo.vercel.app/api/webhooks/rd/totem-geral/SEGREDO
+```
+
 Cada fluxo deve ter como critério a conversão correspondente à sua origem.
 
 Em produção, cadastre no RD a URL HTTPS fornecida pela Vercel, incluindo o segredo. O endpoint de saúde é `/api/health`.

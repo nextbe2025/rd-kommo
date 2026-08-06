@@ -6,8 +6,15 @@ export const runtime = "nodejs";
 export const maxDuration = 30;
 
 export async function POST(request: NextRequest) {
+  return handleRdWebhook(request);
+}
+
+export async function handleRdWebhook(
+  request: NextRequest,
+  pathCredentials?: { route: string; secret: string },
+) {
   const configuredSecret = process.env.RD_WEBHOOK_SECRET;
-  const suppliedSecret = request.nextUrl.searchParams.get("secret") || request.headers.get("x-webhook-secret");
+  const suppliedSecret = pathCredentials?.secret || request.nextUrl.searchParams.get("secret") || request.headers.get("x-webhook-secret");
   if (configuredSecret && suppliedSecret !== configuredSecret) {
     return NextResponse.json({ ok: false, error: "Webhook não autorizado." }, { status: 401 });
   }
@@ -30,7 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     const record = body as Record<string, unknown>;
-    const automationRoute = request.nextUrl.searchParams.get("route")?.trim();
+    const automationRoute = pathCredentials?.route || request.nextUrl.searchParams.get("route")?.trim();
     const isStandardWebhook = "event_identifier" in record && "contact" in record;
 
     if (!isStandardWebhook && automationRoute) {
