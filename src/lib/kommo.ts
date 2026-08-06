@@ -10,6 +10,7 @@ export class KommoError extends Error {
     public readonly status: number,
     public readonly detail?: unknown,
     public readonly operation?: string,
+    public readonly context?: Record<string, unknown>,
   ) {
     super(message);
   }
@@ -120,19 +121,29 @@ export class KommoClient {
     tags: string[];
     customFields: KommoFieldValue[];
   }): Promise<KommoLead> {
-    const data = await this.request<Collection<KommoLead>>("/leads", {
-      method: "POST",
-      body: JSON.stringify([{
-        name: input.name,
-        pipeline_id: input.pipelineId,
-        status_id: input.statusId,
-        custom_fields_values: input.customFields,
-        _embedded: {
-          contacts: [{ id: input.contactId, is_main: true }],
-          tags: input.tags.map((name) => ({ name })),
-        },
-      }]),
-    }, 0, "criar oportunidade");
+    let data: Collection<KommoLead> | null;
+    try {
+      data = await this.request<Collection<KommoLead>>("/leads", {
+        method: "POST",
+        body: JSON.stringify([{
+          name: input.name,
+          pipeline_id: input.pipelineId,
+          status_id: input.statusId,
+          custom_fields_values: input.customFields,
+          _embedded: {
+            contacts: [{ id: input.contactId, is_main: true }],
+            tags: input.tags.map((name) => ({ name })),
+          },
+        }]),
+      }, 0, "criar oportunidade");
+    } catch (error) {
+      if (error instanceof KommoError) {
+        throw new KommoError(error.message, error.status, error.detail, error.operation, {
+          customFields: input.customFields.map((field, index) => ({ index, fieldId: field.field_id ?? field.field_code })),
+        });
+      }
+      throw error;
+    }
     const lead = data?._embedded?.leads?.[0];
     if (!lead) throw new Error("A Kommo não retornou a oportunidade criada.");
     return lead;

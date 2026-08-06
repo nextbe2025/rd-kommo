@@ -68,9 +68,14 @@ export async function handleRdWebhook(
   } catch (error) {
     const message = error instanceof Error ? error.message : "Erro desconhecido";
     const kommo = error instanceof KommoError
-      ? { status: error.status, operation: error.operation, detail: safeKommoErrorDetail(error.detail) }
+      ? {
+          status: error.status,
+          operation: error.operation,
+          detail: safeKommoErrorDetail(error.detail),
+          context: error.context,
+        }
       : undefined;
-    console.error("Falha ao processar webhook RD", { message, kommo });
+    console.error("Falha ao processar webhook RD", JSON.stringify({ message, kommo }));
     return NextResponse.json({ ok: false, error: message }, { status: 500 });
   }
 }
