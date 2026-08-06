@@ -13,7 +13,29 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const conversion = parseRdWebhook(await request.json());
+    const rawBody = await request.text();
+    if (!rawBody.trim()) {
+      return NextResponse.json({ ok: true, mode: "validation" });
+    }
+
+    let body: unknown;
+    try {
+      body = JSON.parse(rawBody);
+    } catch {
+      return NextResponse.json({ ok: false, error: "JSON inválido." }, { status: 400 });
+    }
+
+    if (
+      !body ||
+      typeof body !== "object" ||
+      Array.isArray(body) ||
+      !("event_identifier" in body) ||
+      !("contact" in body)
+    ) {
+      return NextResponse.json({ ok: true, mode: "validation" });
+    }
+
+    const conversion = parseRdWebhook(body);
     const receipt = sanitizedReceipt(conversion);
 
     if (process.env.KOMMO_SYNC_ENABLED !== "true") {

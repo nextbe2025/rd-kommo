@@ -21,4 +21,8 @@ describe("payload do RD", () => {
     expect(parsed.customFields.cf_quantas_unidades_possui).toBe("4 a 10");
     expect(sanitizedReceipt(parsed)).not.toHaveProperty("email");
   });
+
+  it("rejeita payload sem contato fora da validação HTTP", () => {
+    expect(() => parseRdWebhook({ event_identifier: "evento" })).toThrow("sem o objeto contact");
+  });
 });
