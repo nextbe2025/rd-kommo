@@ -1,0 +1,10 @@
+import { NextResponse } from "next/server";
+
+export function GET() {
+  return NextResponse.json({
+    ok: true,
+    service: "nextcard-rd-kommo",
+    kommoConfigured: Boolean(process.env.KOMMO_SUBDOMAIN && process.env.KOMMO_LONG_LIVED_TOKEN),
+    syncEnabled: process.env.KOMMO_SYNC_ENABLED === "true",
+  });
+}
