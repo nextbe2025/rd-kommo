@@ -5,7 +5,12 @@ type Collection<T> = { _embedded?: Record<string, T[]> };
 type Pipeline = { id: number; name: string; _embedded?: { statuses?: Array<{ id: number; name: string }> } };
 
 export class KommoError extends Error {
-  constructor(message: string, public readonly status: number, public readonly detail?: unknown) {
+  constructor(
+    message: string,
+    public readonly status: number,
+    public readonly detail?: unknown,
+    public readonly operation?: string,
+  ) {
     super(message);
   }
 }
@@ -17,7 +22,7 @@ export class KommoClient {
     this.baseUrl = `https://${subdomain}.kommo.com/api/v4`;
   }
 
-  private async request<T>(path: string, init: RequestInit = {}, attempt = 0): Promise<T | null> {
+  private async request<T>(path: string, init: RequestInit = {}, attempt = 0, operation = "processar requisição"): Promise<T | null> {
     const response = await fetch(`${this.baseUrl}${path}`, {
       ...init,
       headers: {
@@ -32,18 +37,25 @@ export class KommoClient {
     if (response.status === 204) return null;
     if (response.status === 429 && attempt < 3) {
       await new Promise((resolve) => setTimeout(resolve, 500 * 2 ** attempt));
-      return this.request<T>(path, init, attempt + 1);
+      return this.request<T>(path, init, attempt + 1, operation);
     }
 
     const text = await response.text();
     let data: unknown;
     try { data = text ? JSON.parse(text) : null; } catch { data = text; }
-    if (!response.ok) throw new KommoError(`Kommo respondeu HTTP ${response.status}.`, response.status, data);
+    if (!response.ok) {
+      throw new KommoError(
+        `Kommo recusou ${operation} (HTTP ${response.status}).`,
+        response.status,
+        data,
+        operation,
+      );
+    }
     return data as T;
   }
 
   async resolvePipeline(pipelineName: string, stageName: string) {
-    const data = await this.request<Collection<Pipeline>>("/leads/pipelines");
+    const data = await this.request<Collection<Pipeline>>("/leads/pipelines", {}, 0, "consultar funis");
     const pipelines = data?._embedded?.pipelines ?? [];
     const pipeline = pipelines.find((item) => normalizeText(item.name) === normalizeText(pipelineName));
     if (!pipeline) throw new Error(`Funil da Kommo não encontrado: ${pipelineName}`);
@@ -53,13 +65,13 @@ export class KommoClient {
   }
 
   async getCustomFields(entity: "leads" | "contacts"): Promise<KommoCustomField[]> {
-    const data = await this.request<Collection<KommoCustomField>>(`/${entity}/custom_fields?limit=250`);
+    const data = await this.request<Collection<KommoCustomField>>(`/${entity}/custom_fields?limit=250`, {}, 0, `consultar campos de ${entity}`);
     return data?._embedded?.custom_fields ?? [];
   }
 
   async findContact(phone?: string, email?: string): Promise<KommoContact | undefined> {
     for (const query of [phone, email].filter(Boolean) as string[]) {
-      const data = await this.request<Collection<KommoContact>>(`/contacts?with=leads&limit=50&query=${encodeURIComponent(query)}`);
+      const data = await this.request<Collection<KommoContact>>(`/contacts?with=leads&limit=50&query=${encodeURIComponent(query)}`, {}, 0, "localizar contato");
       const contacts = data?._embedded?.contacts ?? [];
       const exact = contacts.find((contact) => contactMatches(contact, phone, email));
       if (exact) return exact;
@@ -72,7 +84,7 @@ export class KommoClient {
     const data = await this.request<Collection<KommoContact>>("/contacts", {
       method: "POST",
       body: JSON.stringify([{ name, custom_fields_values: customFields }]),
-    });
+    }, 0, "criar contato");
     const contact = data?._embedded?.contacts?.[0];
     if (!contact) throw new Error("A Kommo não retornou o contato criado.");
     return contact;
@@ -82,11 +94,11 @@ export class KommoClient {
     await this.request(`/contacts/${id}`, {
       method: "PATCH",
       body: JSON.stringify({ name, custom_fields_values: contactFieldValues(phone, email) }),
-    });
+    }, 0, "atualizar contato");
   }
 
   async getLead(id: number): Promise<KommoLead | null> {
-    return this.request<KommoLead>(`/leads/${id}`);
+    return this.request<KommoLead>(`/leads/${id}`, {}, 0, "consultar oportunidade");
   }
 
   async findOpenProductLead(contact: KommoContact, pipelineId: number, product: string): Promise<KommoLead | undefined> {
@@ -120,7 +132,7 @@ export class KommoClient {
           tags: input.tags.map((name) => ({ name })),
         },
       }]),
-    });
+    }, 0, "criar oportunidade");
     const lead = data?._embedded?.leads?.[0];
     if (!lead) throw new Error("A Kommo não retornou a oportunidade criada.");
     return lead;
@@ -134,8 +146,30 @@ export class KommoClient {
         custom_fields_values: customFields,
         _embedded: { tags: tags.map((name) => ({ name })) },
       }),
-    });
+    }, 0, "atualizar oportunidade");
   }
+}
+
+export function safeKommoErrorDetail(detail: unknown): unknown {
+  if (!detail || typeof detail !== "object") return undefined;
+
+  const allowedKeys = new Set([
+    "title", "type", "status", "detail", "code", "path", "request_id",
+    "validation-errors", "errors",
+  ]);
+
+  const filter = (value: unknown): unknown => {
+    if (Array.isArray(value)) return value.map(filter);
+    if (!value || typeof value !== "object") return value;
+
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>)
+        .filter(([key]) => allowedKeys.has(key))
+        .map(([key, child]) => [key, filter(child)]),
+    );
+  };
+
+  return filter(detail);
 }
 
 function contactFieldValues(phone?: string, email?: string): KommoFieldValue[] {

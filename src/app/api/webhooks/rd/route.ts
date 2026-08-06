@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parseRdWebhook, sanitizedReceipt, unwrapRdAutomationPayload } from "@/lib/rd";
 import { syncConversion } from "@/lib/sync";
+import { KommoError, safeKommoErrorDetail } from "@/lib/kommo";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -66,7 +67,10 @@ export async function handleRdWebhook(
     return NextResponse.json({ ok: true, ...result });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Erro desconhecido";
-    console.error("Falha ao processar webhook RD", { message });
+    const kommo = error instanceof KommoError
+      ? { status: error.status, operation: error.operation, detail: safeKommoErrorDetail(error.detail) }
+      : undefined;
+    console.error("Falha ao processar webhook RD", { message, kommo });
     return NextResponse.json({ ok: false, error: message }, { status: 500 });
   }
 }
