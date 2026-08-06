@@ -7,4 +7,11 @@ describe("rotas dos fluxos de automação RD", () => {
     expect(routeForEvent("totem-leadster")?.source).toBe("Leadster");
     expect(routeForEvent("totem-lp")?.source).toBe("Landing Page");
   });
+
+  it("aceita uma rota geral para qualquer entrada do Totem", () => {
+    expect(routeForEvent("totem-geral")).toMatchObject({
+      product: "Totem de Autoatendimento",
+      source: "RD Station",
+    });
+  });
 });

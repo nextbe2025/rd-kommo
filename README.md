@@ -32,6 +32,7 @@ O mesmo endpoint aceita a ação **Enviar Leads para Integração** dos Fluxos d
 Site:     /api/webhooks/rd?secret=SEGREDO&route=totem-site
 Leadster: /api/webhooks/rd?secret=SEGREDO&route=totem-leadster
 LP RD:    /api/webhooks/rd?secret=SEGREDO&route=totem-lp
+Geral:    /api/webhooks/rd?secret=SEGREDO&route=totem-geral
 ```
 
 Cada fluxo deve ter como critério a conversão correspondente à sua origem.

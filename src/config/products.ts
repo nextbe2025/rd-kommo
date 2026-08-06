@@ -1,4 +1,4 @@
-export type Source = "Site" | "Leadster" | "Landing Page";
+export type Source = "Site" | "Leadster" | "Landing Page" | "RD Station";
 
 export type ProductRoute = {
   product: string;
@@ -12,6 +12,13 @@ const pipelineName = process.env.KOMMO_PIPELINE_NAME || "Funil Nextcard";
 const stageName = process.env.KOMMO_ENTRY_STAGE_NAME || "ETAPA DE LEADS ENTRADA";
 
 export const productRoutes: Record<string, ProductRoute> = {
+  "totem-geral": {
+    product: "Totem de Autoatendimento",
+    source: "RD Station",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Totem"],
+  },
   "totem-site": {
     product: "Totem de Autoatendimento",
     source: "Site",
