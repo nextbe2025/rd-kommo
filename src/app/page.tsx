@@ -14,7 +14,7 @@ export default function Home() {
           <li key={event}><strong>{source}:</strong> {event}</li>
         ))}
       </ul>
-      <p>Destino: Funil Nextcard → ETAPA DE LEADS ENTRADA.</p>
+      <p>Destino: Funil Nextcard → ETAPA DE LEADS DE ENTRADA.</p>
     </main>
   );
 }
