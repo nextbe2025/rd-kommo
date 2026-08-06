@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { parseRdWebhook, sanitizedReceipt } from "@/lib/rd";
+import { parseRdWebhook, sanitizedReceipt, unwrapRdAutomationPayload } from "@/lib/rd";
 import { syncConversion } from "@/lib/sync";
 
 export const runtime = "nodejs";
@@ -41,12 +41,13 @@ export async function handleRdWebhook(
     const isStandardWebhook = "event_identifier" in record && "contact" in record;
 
     if (!isStandardWebhook && automationRoute) {
+      const contact = unwrapRdAutomationPayload(record);
       body = {
         event_type: "RD_AUTOMATION",
         entity_type: "CONTACT",
         event_identifier: automationRoute,
         event_timestamp: new Date().toISOString(),
-        contact: record,
+        contact,
       };
     } else if (!isStandardWebhook) {
       return NextResponse.json({ ok: true, mode: "validation" });
