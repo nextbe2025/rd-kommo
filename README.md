@@ -34,6 +34,22 @@ Na Vercel, configure as variáveis de ambiente da `.env.example`. Primeiro publi
 
 O serviço nunca registra nome, e-mail, telefone ou os valores dos campos personalizados. Os logs contêm apenas o identificador do evento e os nomes das chaves recebidas.
 
+## Conectar a conta RD pela API
+
+Crie um aplicativo privado do produto **RD Station Marketing** no App Publisher e cadastre exatamente esta callback:
+
+```text
+https://rd-kommo.vercel.app/api/auth/rd/callback
+```
+
+Na Vercel, configure `RD_CLIENT_ID`, `RD_CLIENT_SECRET` e `RD_REDIRECT_URI`. Após o redeploy, abra no navegador:
+
+```text
+https://rd-kommo.vercel.app/api/auth/rd/start?secret=SEU_RD_WEBHOOK_SECRET
+```
+
+Ao autorizar a conta correta, o callback troca o código por um token temporário e cria uma única assinatura `WEBHOOK.CONVERTED` limitada aos três eventos do Totem. Os tokens do RD não são retornados ao navegador nem armazenados pela aplicação.
+
 ## Comportamento
 
 - Eventos desconhecidos são ignorados.
