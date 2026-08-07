@@ -5,7 +5,7 @@ export function GET() {
     ok: true,
     service: "nextcard-rd-kommo",
     kommoConfigured: Boolean(process.env.KOMMO_SUBDOMAIN && process.env.KOMMO_LONG_LIVED_TOKEN),
-    rdOAuthConfigured: Boolean(process.env.RD_CLIENT_ID && process.env.RD_CLIENT_SECRET && process.env.RD_REDIRECT_URI),
+    rdWebhookConfigured: Boolean(process.env.RD_WEBHOOK_SECRET),
     syncEnabled: process.env.KOMMO_SYNC_ENABLED === "true",
   });
 }
