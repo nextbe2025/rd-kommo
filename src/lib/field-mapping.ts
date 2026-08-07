@@ -37,6 +37,7 @@ export type SemanticLeadData = {
 export function buildLeadCustomFields(fields: KommoCustomField[], data: SemanticLeadData) {
   const warnings: string[] = [];
   const output: KommoFieldValue[] = [];
+  const mappedFields: Array<{ id: number; name: string; type: string }> = [];
   const claimed = new Set<number>();
 
   for (const [semantic, names] of Object.entries(aliases)) {
@@ -48,7 +49,11 @@ export function buildLeadCustomFields(fields: KommoCustomField[], data: Semantic
       continue;
     }
     const mapped = toFieldValue(field, value);
-    if (mapped) { output.push(mapped); claimed.add(field.id); }
+    if (mapped) {
+      output.push(mapped);
+      mappedFields.push({ id: field.id, name: field.name, type: field.type });
+      claimed.add(field.id);
+    }
     else warnings.push(`Valor não compatível com ${field.name}: ${String(value)}`);
   }
 
@@ -60,11 +65,15 @@ export function buildLeadCustomFields(fields: KommoCustomField[], data: Semantic
       continue;
     }
     const mapped = toFieldValue(field, value);
-    if (mapped) { output.push(mapped); claimed.add(field.id); }
+    if (mapped) {
+      output.push(mapped);
+      mappedFields.push({ id: field.id, name: field.name, type: field.type });
+      claimed.add(field.id);
+    }
     else warnings.push(`Valor não compatível com ${field.name}: ${String(value)}`);
   }
 
-  return { fields: output, warnings };
+  return { fields: output, mappedFields, warnings };
 }
 
 function findField(fields: KommoCustomField[], names: string[]): KommoCustomField | undefined {

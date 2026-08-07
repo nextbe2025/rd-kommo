@@ -63,7 +63,7 @@ export async function handleRdWebhook(
     }
 
     const result = await syncConversion(conversion);
-    console.info("RD webhook processado", { eventIdentifier: conversion.eventIdentifier, ...result });
+    console.info("RD webhook processado", JSON.stringify({ eventIdentifier: conversion.eventIdentifier, ...result }));
     return NextResponse.json({ ok: true, ...result });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Erro desconhecido";

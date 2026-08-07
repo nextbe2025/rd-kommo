@@ -43,7 +43,13 @@ export async function syncConversion(conversion: ParsedRdConversion) {
   const existing = await kommo.findOpenProductLead(contact, pipelineId, route.product);
   if (existing) {
     await kommo.updateLead(existing.id, statusId, mapped.fields, route.tags);
-    return { status: "updated" as const, contactId: contact.id, leadId: existing.id, warnings: mapped.warnings };
+    return {
+      status: "updated" as const,
+      contactId: contact.id,
+      leadId: existing.id,
+      mappedFields: mapped.mappedFields,
+      warnings: mapped.warnings,
+    };
   }
 
   const lead = await kommo.createLead({
@@ -54,7 +60,13 @@ export async function syncConversion(conversion: ParsedRdConversion) {
     tags: route.tags,
     customFields: mapped.fields,
   });
-  return { status: "created" as const, contactId: contact.id, leadId: lead.id, warnings: mapped.warnings };
+  return {
+    status: "created" as const,
+    contactId: contact.id,
+    leadId: lead.id,
+    mappedFields: mapped.mappedFields,
+    warnings: mapped.warnings,
+  };
 }
 
 function customerFocus(product: string): "Totem" | "Comanda" | "Catraca" | undefined {
