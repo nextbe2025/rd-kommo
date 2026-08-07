@@ -61,6 +61,55 @@ export const productRoutes: Record<string, ProductRoute> = {
     stageName,
     tags: ["RD", "Totem", "LP"],
   },
+  "catracas-geral": {
+    product: "Catracas Expedidoras de Comandas",
+    source: "RD Station",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Catracas"],
+  },
+  "catracas-site": {
+    product: "Catracas Expedidoras de Comandas",
+    source: "Site",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Catracas", "Site"],
+  },
+  "catracas-leadster": {
+    product: "Catracas Expedidoras de Comandas",
+    source: "Leadster",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Catracas", "Leadster"],
+  },
+  "catracas-lp": {
+    product: "Catracas Expedidoras de Comandas",
+    source: "Landing Page",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Catracas", "LP"],
+  },
+  "[FORM] - Catracas Expedidoras de Comandas": {
+    product: "Catracas Expedidoras de Comandas",
+    source: "Site",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Catracas", "Site"],
+  },
+  "[LEADSTER] - LP Catracas Expedidoras": {
+    product: "Catracas Expedidoras de Comandas",
+    source: "Leadster",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Catracas", "Leadster"],
+  },
+  "catracas-expedidoras-de-comandas": {
+    product: "Catracas Expedidoras de Comandas",
+    source: "Landing Page",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Catracas", "LP"],
+  },
 };
 
 export function routeForEvent(eventIdentifier: string): ProductRoute | undefined {

@@ -9,6 +9,9 @@ Recebe conversões do RD Station Marketing e cria ou atualiza contatos e oportun
 | `[FORM] - Totem de Autoatendimento` | Site | Totem de Autoatendimento | Funil Nextcard |
 | `[LEADSTER] - LP Totem` | Leadster | Totem de Autoatendimento | Funil Nextcard |
 | `totem-de-autoatendimento` | Landing Page | Totem de Autoatendimento | Funil Nextcard |
+| `[FORM] - Catracas Expedidoras de Comandas` | Site | Catracas Expedidoras de Comandas | Funil Nextcard |
+| `[LEADSTER] - LP Catracas Expedidoras` | Leadster | Catracas Expedidoras de Comandas | Funil Nextcard |
+| `catracas-expedidoras-de-comandas` | Landing Page | Catracas Expedidoras de Comandas | Funil Nextcard |
 
 Etapa de entrada: `NOVOS LEADS RD`.
 
@@ -33,12 +36,14 @@ Site:     /api/webhooks/rd?secret=SEGREDO&route=totem-site
 Leadster: /api/webhooks/rd?secret=SEGREDO&route=totem-leadster
 LP RD:    /api/webhooks/rd?secret=SEGREDO&route=totem-lp
 Geral:    /api/webhooks/rd?secret=SEGREDO&route=totem-geral
+Catracas: /api/webhooks/rd?secret=SEGREDO&route=catracas-geral
 ```
 
 Se o validador de URL do RD rejeitar parâmetros, use o formato equivalente sem query string:
 
 ```text
 https://rd-kommo.vercel.app/api/webhooks/rd/totem-geral/SEGREDO
+https://rd-kommo.vercel.app/api/webhooks/rd/catracas-geral/SEGREDO
 ```
 
 Cada fluxo deve ter como critério a conversão correspondente à sua origem.
@@ -58,5 +63,6 @@ O serviço nunca registra nome, e-mail, telefone ou os valores dos campos person
 - Telefones brasileiros são normalizados para `+55`.
 - Um contato existente é atualizado.
 - Uma oportunidade Totem aberta no mesmo funil é atualizada.
+- Uma oportunidade Catracas aberta no mesmo funil é atualizada.
 - Sem oportunidade aberta, uma nova é criada em `NOVOS LEADS RD`.
 - Campos personalizados são encontrados pelo nome; campos ausentes geram aviso sem bloquear o lead.

@@ -14,4 +14,22 @@ describe("rotas dos fluxos de automação RD", () => {
       source: "RD Station",
     });
   });
+
+  it("mapeia as três entradas de Catracas", () => {
+    expect(routeForEvent("[FORM] - Catracas Expedidoras de Comandas")).toMatchObject({
+      product: "Catracas Expedidoras de Comandas",
+      source: "Site",
+      tags: ["RD", "Catracas", "Site"],
+    });
+    expect(routeForEvent("[LEADSTER] - LP Catracas Expedidoras")?.source).toBe("Leadster");
+    expect(routeForEvent("catracas-expedidoras-de-comandas")?.source).toBe("Landing Page");
+  });
+
+  it("aceita uma rota geral para qualquer entrada de Catracas", () => {
+    expect(routeForEvent("catracas-geral")).toMatchObject({
+      product: "Catracas Expedidoras de Comandas",
+      source: "RD Station",
+      tags: ["RD", "Catracas"],
+    });
+  });
 });
