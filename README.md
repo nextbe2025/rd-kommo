@@ -66,3 +66,4 @@ O serviço nunca registra nome, e-mail, telefone ou os valores dos campos person
 - Uma oportunidade Catracas aberta no mesmo funil é atualizada.
 - Sem oportunidade aberta, uma nova é criada em `NOVOS LEADS RD`.
 - Campos personalizados são encontrados pelo nome; campos ausentes geram aviso sem bloquear o lead.
+- O campo `Foco do Cliente` recebe `Totem`, `Catraca` ou `Comanda`, conforme o produto.

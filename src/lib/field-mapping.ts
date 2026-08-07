@@ -3,6 +3,7 @@ import { normalizeText } from "@/lib/normalize";
 
 const aliases: Record<string, string[]> = {
   product: ["Produto", "Produto de interesse"],
+  focus: ["Foco do Cliente"],
   source: ["Canal de entrada", "Origem da conversão", "Fonte do lead"],
   rdOrigin: ["Origem RD", "Origem de marketing"],
   event: ["Evento RD", "Converteu no evento", "Identificador do evento"],
@@ -18,6 +19,7 @@ const aliases: Record<string, string[]> = {
 
 export type SemanticLeadData = {
   product: unknown;
+  focus?: unknown;
   source: unknown;
   rdOrigin?: unknown;
   event: unknown;

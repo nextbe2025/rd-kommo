@@ -25,6 +25,7 @@ export async function syncConversion(conversion: ParsedRdConversion) {
   const idFromCustomFields = findCustomValue(conversion.customFields, ["id da conversao", "conversion id", "id conversao"]);
   const mapped = buildLeadCustomFields(leadFields, {
     product: route.product,
+    focus: customerFocus(route.product),
     source: route.source,
     rdOrigin: origin,
     event: conversion.eventIdentifier,
@@ -54,6 +55,14 @@ export async function syncConversion(conversion: ParsedRdConversion) {
     customFields: mapped.fields,
   });
   return { status: "created" as const, contactId: contact.id, leadId: lead.id, warnings: mapped.warnings };
+}
+
+function customerFocus(product: string): "Totem" | "Comanda" | "Catraca" | undefined {
+  const normalized = product.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  if (normalized.includes("totem")) return "Totem";
+  if (normalized.includes("catraca")) return "Catraca";
+  if (normalized.includes("comanda")) return "Comanda";
+  return undefined;
 }
 
 function readableOrigin(origin: unknown): string | undefined {
