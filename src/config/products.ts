@@ -110,6 +110,55 @@ export const productRoutes: Record<string, ProductRoute> = {
     stageName,
     tags: ["RD", "Catracas", "LP"],
   },
+  "comandas-geral": {
+    product: "Comandas Eletrônicas",
+    source: "RD Station",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Comandas"],
+  },
+  "comandas-site": {
+    product: "Comandas Eletrônicas",
+    source: "Site",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Comandas", "Site"],
+  },
+  "comandas-leadster": {
+    product: "Comandas Eletrônicas",
+    source: "Leadster",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Comandas", "Leadster"],
+  },
+  "comandas-lp": {
+    product: "Comandas Eletrônicas",
+    source: "Landing Page",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Comandas", "LP"],
+  },
+  "[FORM] - Comandas Eletrônicas Site": {
+    product: "Comandas Eletrônicas",
+    source: "Site",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Comandas", "Site"],
+  },
+  "[LEADSTER] - LP Comandas Eletrônicas": {
+    product: "Comandas Eletrônicas",
+    source: "Leadster",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Comandas", "Leadster"],
+  },
+  "comandas-eletronicas-google": {
+    product: "Comandas Eletrônicas",
+    source: "Landing Page",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Comandas", "LP"],
+  },
 };
 
 export function routeForEvent(eventIdentifier: string): ProductRoute | undefined {

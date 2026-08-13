@@ -5,6 +5,9 @@ const events = [
   ["Catracas", "Site", "[FORM] - Catracas Expedidoras de Comandas"],
   ["Catracas", "Leadster", "[LEADSTER] - LP Catracas Expedidoras"],
   ["Catracas", "Landing Page", "catracas-expedidoras-de-comandas"],
+  ["Comandas", "Site", "[FORM] - Comandas Eletrônicas Site"],
+  ["Comandas", "Leadster", "[LEADSTER] - LP Comandas Eletrônicas"],
+  ["Comandas", "Landing Page", "comandas-eletronicas-google"],
 ];
 
 export default function Home() {

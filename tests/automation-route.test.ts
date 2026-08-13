@@ -32,4 +32,22 @@ describe("rotas dos fluxos de automação RD", () => {
       tags: ["RD", "Catracas"],
     });
   });
+
+  it("mapeia as três entradas de Comandas Eletrônicas", () => {
+    expect(routeForEvent("[FORM] - Comandas Eletrônicas Site")).toMatchObject({
+      product: "Comandas Eletrônicas",
+      source: "Site",
+      tags: ["RD", "Comandas", "Site"],
+    });
+    expect(routeForEvent("[LEADSTER] - LP Comandas Eletrônicas")?.source).toBe("Leadster");
+    expect(routeForEvent("comandas-eletronicas-google")?.source).toBe("Landing Page");
+  });
+
+  it("aceita uma rota geral para qualquer entrada de Comandas", () => {
+    expect(routeForEvent("comandas-geral")).toMatchObject({
+      product: "Comandas Eletrônicas",
+      source: "RD Station",
+      tags: ["RD", "Comandas"],
+    });
+  });
 });
