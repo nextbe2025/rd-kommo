@@ -27,4 +27,31 @@ describe("mapeamento dos campos da oportunidade", () => {
       values: [{ value: "Catraca", enum_id: 3 }],
     });
   });
+
+  it("mapeia Teloos no campo Foco do Cliente", () => {
+    const result = buildLeadCustomFields([
+      {
+        id: 123,
+        name: "Foco do Cliente",
+        type: "select",
+        enums: [
+          { id: 1, value: "Totem" },
+          { id: 2, value: "Comanda" },
+          { id: 3, value: "Catraca" },
+          { id: 4, value: "Teloos" },
+        ],
+      },
+    ], {
+      product: "Teloos",
+      focus: "Teloos",
+      source: "RD Station",
+      event: "teloos-geral",
+      custom: {},
+    });
+
+    expect(result.fields).toContainEqual({
+      field_id: 123,
+      values: [{ value: "Teloos", enum_id: 4 }],
+    });
+  });
 });

@@ -69,11 +69,12 @@ export async function syncConversion(conversion: ParsedRdConversion) {
   };
 }
 
-function customerFocus(product: string): "Totem" | "Comanda" | "Catraca" | undefined {
+function customerFocus(product: string): "Totem" | "Comanda" | "Catraca" | "Teloos" | undefined {
   const normalized = product.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   if (normalized.includes("totem")) return "Totem";
   if (normalized.includes("catraca")) return "Catraca";
   if (normalized.includes("comanda")) return "Comanda";
+  if (normalized.includes("teloos")) return "Teloos";
   return undefined;
 }
 

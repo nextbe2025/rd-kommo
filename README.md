@@ -77,4 +77,4 @@ O serviço nunca registra nome, e-mail, telefone ou os valores dos campos person
 - Uma oportunidade Teloos aberta no Funil Teloos é atualizada.
 - Sem oportunidade aberta, uma nova é criada em `NOVOS LEADS RD`.
 - Campos personalizados são encontrados pelo nome; campos ausentes geram aviso sem bloquear o lead.
-- O campo `Foco do Cliente` recebe `Totem`, `Catraca` ou `Comanda`, conforme o produto.
+- O campo `Foco do Cliente` recebe `Totem`, `Catraca`, `Comanda` ou `Teloos`, conforme o produto.
