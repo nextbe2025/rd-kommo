@@ -10,6 +10,8 @@ export type ProductRoute = {
 
 const pipelineName = process.env.KOMMO_PIPELINE_NAME || "Funil Nextcard";
 const stageName = process.env.KOMMO_ENTRY_STAGE_NAME || "NOVOS LEADS RD";
+const teloosPipelineName = process.env.KOMMO_TELOOS_PIPELINE_NAME || "Funil Teloos";
+const teloosStageName = process.env.KOMMO_TELOOS_ENTRY_STAGE_NAME || "NOVOS LEADS RD";
 
 export const productRoutes: Record<string, ProductRoute> = {
   "totem-geral": {
@@ -158,6 +160,41 @@ export const productRoutes: Record<string, ProductRoute> = {
     pipelineName,
     stageName,
     tags: ["RD", "Comandas", "LP"],
+  },
+  "teloos-geral": {
+    product: "Teloos",
+    source: "RD Station",
+    pipelineName: teloosPipelineName,
+    stageName: teloosStageName,
+    tags: ["RD", "Teloos"],
+  },
+  "teloos-site": {
+    product: "Teloos",
+    source: "Site",
+    pipelineName: teloosPipelineName,
+    stageName: teloosStageName,
+    tags: ["RD", "Teloos", "Site"],
+  },
+  "teloos-leadster": {
+    product: "Teloos",
+    source: "Leadster",
+    pipelineName: teloosPipelineName,
+    stageName: teloosStageName,
+    tags: ["RD", "Teloos", "Leadster"],
+  },
+  "Formulário de Contato - Site Teloos": {
+    product: "Teloos",
+    source: "Site",
+    pipelineName: teloosPipelineName,
+    stageName: teloosStageName,
+    tags: ["RD", "Teloos", "Site"],
+  },
+  "[LEADSTER] - Site Teloos": {
+    product: "Teloos",
+    source: "Leadster",
+    pipelineName: teloosPipelineName,
+    stageName: teloosStageName,
+    tags: ["RD", "Teloos", "Leadster"],
   },
 };
 

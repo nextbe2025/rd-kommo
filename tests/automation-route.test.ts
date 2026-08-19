@@ -50,4 +50,31 @@ describe("rotas dos fluxos de automação RD", () => {
       tags: ["RD", "Comandas"],
     });
   });
+
+  it("mapeia as duas entradas da Teloos para seu próprio funil", () => {
+    expect(routeForEvent("Formulário de Contato - Site Teloos")).toMatchObject({
+      product: "Teloos",
+      source: "Site",
+      pipelineName: "Funil Teloos",
+      stageName: "NOVOS LEADS RD",
+      tags: ["RD", "Teloos", "Site"],
+    });
+    expect(routeForEvent("[LEADSTER] - Site Teloos")).toMatchObject({
+      product: "Teloos",
+      source: "Leadster",
+      pipelineName: "Funil Teloos",
+      stageName: "NOVOS LEADS RD",
+      tags: ["RD", "Teloos", "Leadster"],
+    });
+  });
+
+  it("aceita uma rota geral para qualquer entrada da Teloos", () => {
+    expect(routeForEvent("teloos-geral")).toMatchObject({
+      product: "Teloos",
+      source: "RD Station",
+      pipelineName: "Funil Teloos",
+      stageName: "NOVOS LEADS RD",
+      tags: ["RD", "Teloos"],
+    });
+  });
 });

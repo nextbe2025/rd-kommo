@@ -15,6 +15,8 @@ Recebe conversões do RD Station Marketing e cria ou atualiza contatos e oportun
 | `[FORM] - Comandas Eletrônicas Site` | Site | Comandas Eletrônicas | Funil Nextcard |
 | `[LEADSTER] - LP Comandas Eletrônicas` | Leadster | Comandas Eletrônicas | Funil Nextcard |
 | `comandas-eletronicas-google` | Landing Page | Comandas Eletrônicas | Funil Nextcard |
+| `Formulário de Contato - Site Teloos` | Site | Teloos | Funil Teloos |
+| `[LEADSTER] - Site Teloos` | Leadster | Teloos | Funil Teloos |
 
 Etapa de entrada: `NOVOS LEADS RD`.
 
@@ -41,6 +43,7 @@ LP RD:    /api/webhooks/rd?secret=SEGREDO&route=totem-lp
 Geral:    /api/webhooks/rd?secret=SEGREDO&route=totem-geral
 Catracas: /api/webhooks/rd?secret=SEGREDO&route=catracas-geral
 Comandas: /api/webhooks/rd?secret=SEGREDO&route=comandas-geral
+Teloos:   /api/webhooks/rd?secret=SEGREDO&route=teloos-geral
 ```
 
 Se o validador de URL do RD rejeitar parâmetros, use o formato equivalente sem query string:
@@ -49,6 +52,7 @@ Se o validador de URL do RD rejeitar parâmetros, use o formato equivalente sem 
 https://rd-kommo.vercel.app/api/webhooks/rd/totem-geral/SEGREDO
 https://rd-kommo.vercel.app/api/webhooks/rd/catracas-geral/SEGREDO
 https://rd-kommo.vercel.app/api/webhooks/rd/comandas-geral/SEGREDO
+https://rd-kommo.vercel.app/api/webhooks/rd/teloos-geral/SEGREDO
 ```
 
 Cada fluxo deve ter como critério a conversão correspondente à sua origem.
@@ -70,6 +74,7 @@ O serviço nunca registra nome, e-mail, telefone ou os valores dos campos person
 - Uma oportunidade Totem aberta no mesmo funil é atualizada.
 - Uma oportunidade Catracas aberta no mesmo funil é atualizada.
 - Uma oportunidade Comandas aberta no mesmo funil é atualizada.
+- Uma oportunidade Teloos aberta no Funil Teloos é atualizada.
 - Sem oportunidade aberta, uma nova é criada em `NOVOS LEADS RD`.
 - Campos personalizados são encontrados pelo nome; campos ausentes geram aviso sem bloquear o lead.
 - O campo `Foco do Cliente` recebe `Totem`, `Catraca` ou `Comanda`, conforme o produto.

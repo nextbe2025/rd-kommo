@@ -8,6 +8,8 @@ const events = [
   ["Comandas", "Site", "[FORM] - Comandas Eletrônicas Site"],
   ["Comandas", "Leadster", "[LEADSTER] - LP Comandas Eletrônicas"],
   ["Comandas", "Landing Page", "comandas-eletronicas-google"],
+  ["Teloos", "Site", "Formulário de Contato - Site Teloos"],
+  ["Teloos", "Leadster", "[LEADSTER] - Site Teloos"],
 ];
 
 export default function Home() {
@@ -20,7 +22,7 @@ export default function Home() {
           <li key={event}><strong>{product} · {source}:</strong> {event}</li>
         ))}
       </ul>
-      <p>Destino: Funil Nextcard → NOVOS LEADS RD.</p>
+      <p>Destinos: Funil Nextcard ou Funil Teloos → NOVOS LEADS RD.</p>
     </main>
   );
 }
