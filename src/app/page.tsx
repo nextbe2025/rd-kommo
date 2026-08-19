@@ -9,6 +9,7 @@ const events = [
   ["Comandas", "Site", "[FORM] - Comandas Eletrônicas Site"],
   ["Comandas", "Leadster", "[LEADSTER] - LP Comandas Eletrônicas"],
   ["Comandas", "Landing Page", "comandas-eletronicas-google"],
+  ["Comandas", "Meta Ads", "[META LEADS ADS] - COMANDAS"],
   ["Teloos", "Site", "Formulário de Contato - Site Teloos"],
   ["Teloos", "Leadster", "[LEADSTER] - Site Teloos"],
 ];

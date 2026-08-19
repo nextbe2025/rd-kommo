@@ -51,6 +51,16 @@ describe("rotas dos fluxos de automação RD", () => {
     });
   });
 
+  it("reconhece o formulário do Meta Leads Ads como Comandas", () => {
+    expect(routeForEvent("[META LEADS ADS] - COMANDAS")).toMatchObject({
+      product: "Comandas Eletrônicas",
+      source: "Meta Ads",
+      pipelineName: "Funil Nextcard",
+      stageName: "NOVOS LEADS RD",
+      tags: ["RD", "Comandas", "Meta Ads"],
+    });
+  });
+
   it("mapeia as duas entradas da Teloos para seu próprio funil", () => {
     expect(routeForEvent("Formulário de Contato - Site Teloos")).toMatchObject({
       product: "Teloos",

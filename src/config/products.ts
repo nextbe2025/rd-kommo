@@ -1,4 +1,4 @@
-export type Source = "Site" | "Leadster" | "Landing Page" | "RD Station";
+export type Source = "Site" | "Leadster" | "Landing Page" | "Meta Ads" | "RD Station";
 
 export type ProductRoute = {
   product: string;
@@ -160,6 +160,13 @@ export const productRoutes: Record<string, ProductRoute> = {
     pipelineName,
     stageName,
     tags: ["RD", "Comandas", "Leadster"],
+  },
+  "[META LEADS ADS] - COMANDAS": {
+    product: "Comandas Eletrônicas",
+    source: "Meta Ads",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Comandas", "Meta Ads"],
   },
   "comandas-eletronicas-google": {
     product: "Comandas Eletrônicas",

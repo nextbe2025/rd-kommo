@@ -15,6 +15,7 @@ Recebe conversões do RD Station Marketing e cria ou atualiza contatos e oportun
 | `[FORM] - Comandas Eletrônicas Site` | Site | Comandas Eletrônicas | Funil Nextcard |
 | `[LEADSTER] - LP Comandas Eletrônicas` | Leadster | Comandas Eletrônicas | Funil Nextcard |
 | `comandas-eletronicas-google` | Landing Page | Comandas Eletrônicas | Funil Nextcard |
+| `[META LEADS ADS] - COMANDAS` | Meta Ads | Comandas Eletrônicas | Funil Nextcard |
 | `Formulário de Contato - Site Teloos` | Site | Teloos | Funil Teloos |
 | `[LEADSTER] - Site Teloos` | Leadster | Teloos | Funil Teloos |
 | `Formulário Contato Site` | Site | Contato geral Nextcard | Funil Nextcard |
