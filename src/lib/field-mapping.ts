@@ -17,6 +17,11 @@ const aliases: Record<string, string[]> = {
   utmTerm: ["UTM_TERM", "UTM Term"],
 };
 
+const customAliases: Record<string, string[]> = {
+  "de qual estado voce e": ["De qual Estado você é?", "De qual Estado você fala?", "Estado"],
+  "de qual estado voce fala": ["De qual Estado você fala?", "De qual Estado você é?", "Estado"],
+};
+
 export type SemanticLeadData = {
   product: unknown;
   focus?: unknown;
@@ -58,7 +63,8 @@ export function buildLeadCustomFields(fields: KommoCustomField[], data: Semantic
   }
 
   for (const [rdKey, value] of Object.entries(data.custom)) {
-    const candidateNames = [rdKey.replace(/^cf_/, "").replace(/_/g, " "), rdKey];
+    const cleanRdKey = rdKey.replace(/^cf_/, "").replace(/_/g, " ");
+    const candidateNames = [cleanRdKey, rdKey, ...(customAliases[normalizeText(cleanRdKey)] ?? [])];
     const field = findField(fields, candidateNames);
     if (!field || claimed.has(field.id)) {
       if (!field) warnings.push(`Campo RD sem correspondente na Kommo: ${rdKey}`);

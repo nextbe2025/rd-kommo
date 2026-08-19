@@ -189,6 +189,13 @@ export const productRoutes: Record<string, ProductRoute> = {
     stageName: teloosStageName,
     tags: ["RD", "Teloos", "Site"],
   },
+  "Formulário Contato Site": {
+    product: "Teloos",
+    source: "Site",
+    pipelineName: teloosPipelineName,
+    stageName: teloosStageName,
+    tags: ["RD", "Teloos", "Site"],
+  },
   "[LEADSTER] - Site Teloos": {
     product: "Teloos",
     source: "Leadster",

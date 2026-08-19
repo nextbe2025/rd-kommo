@@ -78,3 +78,4 @@ O serviço nunca registra nome, e-mail, telefone ou os valores dos campos person
 - Sem oportunidade aberta, uma nova é criada em `NOVOS LEADS RD`.
 - Campos personalizados são encontrados pelo nome; campos ausentes geram aviso sem bloquear o lead.
 - O campo `Foco do Cliente` recebe `Totem`, `Catraca`, `Comanda` ou `Teloos`, conforme o produto.
+- Para a Teloos, `De qual Estado você é?` também corresponde ao campo `De qual Estado você fala?` da Kommo.

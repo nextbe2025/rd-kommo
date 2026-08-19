@@ -66,6 +66,7 @@ describe("rotas dos fluxos de automação RD", () => {
       stageName: "NOVOS LEADS RD",
       tags: ["RD", "Teloos", "Leadster"],
     });
+    expect(routeForEvent("Formulário Contato Site")?.tags).toEqual(["RD", "Teloos", "Site"]);
   });
 
   it("aceita uma rota geral para qualquer entrada da Teloos", () => {

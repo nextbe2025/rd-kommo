@@ -54,4 +54,26 @@ describe("mapeamento dos campos da oportunidade", () => {
       values: [{ value: "Teloos", enum_id: 4 }],
     });
   });
+
+  it("compatibiliza as variações do campo de Estado da RD e da Kommo", () => {
+    const result = buildLeadCustomFields([
+      { id: 456, name: "De qual Estado você fala?", type: "text" },
+      { id: 789, name: "Mensagem", type: "textarea" },
+    ], {
+      product: "Teloos",
+      focus: "Teloos",
+      source: "Site",
+      event: "teloos-site",
+      custom: {
+        "De qual Estado você é?": "SC",
+        "Mensagem": "Quero conhecer a solução",
+      },
+    });
+
+    expect(result.fields).toContainEqual({ field_id: 456, values: [{ value: "SC" }] });
+    expect(result.fields).toContainEqual({
+      field_id: 789,
+      values: [{ value: "Quero conhecer a solução" }],
+    });
+  });
 });
