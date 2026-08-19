@@ -60,10 +60,9 @@ describe("mapeamento dos campos da oportunidade", () => {
       { id: 456, name: "De qual Estado você fala?", type: "text" },
       { id: 789, name: "Mensagem", type: "textarea" },
     ], {
-      product: "Teloos",
-      focus: "Teloos",
+      product: "Contato Site Nextcard",
       source: "Site",
-      event: "teloos-site",
+      event: "Formulário Contato Site",
       custom: {
         "De qual Estado você é?": "SC",
         "Mensagem": "Quero conhecer a solução",

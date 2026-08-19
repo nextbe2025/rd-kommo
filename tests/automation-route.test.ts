@@ -66,7 +66,17 @@ describe("rotas dos fluxos de automação RD", () => {
       stageName: "NOVOS LEADS RD",
       tags: ["RD", "Teloos", "Leadster"],
     });
-    expect(routeForEvent("Formulário Contato Site")?.tags).toEqual(["RD", "Teloos", "Site"]);
+  });
+
+  it("envia o formulário geral do site para o Funil Nextcard", () => {
+    expect(routeForEvent("Formulário Contato Site")).toMatchObject({
+      product: "Contato Site Nextcard",
+      source: "Site",
+      pipelineName: "Funil Nextcard",
+      stageName: "NOVOS LEADS RD",
+      tags: ["RD", "Nextcard", "Site"],
+    });
+    expect(routeForEvent("nextcard-contato-site")?.tags).toEqual(["RD", "Nextcard", "Site"]);
   });
 
   it("aceita uma rota geral para qualquer entrada da Teloos", () => {

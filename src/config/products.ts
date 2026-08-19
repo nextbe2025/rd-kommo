@@ -14,6 +14,13 @@ const teloosPipelineName = process.env.KOMMO_TELOOS_PIPELINE_NAME || "Funil Telo
 const teloosStageName = process.env.KOMMO_TELOOS_ENTRY_STAGE_NAME || "NOVOS LEADS RD";
 
 export const productRoutes: Record<string, ProductRoute> = {
+  "nextcard-contato-site": {
+    product: "Contato Site Nextcard",
+    source: "Site",
+    pipelineName,
+    stageName,
+    tags: ["RD", "Nextcard", "Site"],
+  },
   "totem-geral": {
     product: "Totem de Autoatendimento",
     source: "RD Station",
@@ -190,11 +197,11 @@ export const productRoutes: Record<string, ProductRoute> = {
     tags: ["RD", "Teloos", "Site"],
   },
   "Formulário Contato Site": {
-    product: "Teloos",
+    product: "Contato Site Nextcard",
     source: "Site",
-    pipelineName: teloosPipelineName,
-    stageName: teloosStageName,
-    tags: ["RD", "Teloos", "Site"],
+    pipelineName,
+    stageName,
+    tags: ["RD", "Nextcard", "Site"],
   },
   "[LEADSTER] - Site Teloos": {
     product: "Teloos",

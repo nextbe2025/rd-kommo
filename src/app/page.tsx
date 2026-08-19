@@ -1,4 +1,5 @@
 const events = [
+  ["Nextcard", "Site", "Formulário Contato Site"],
   ["Totem", "Site", "[FORM] - Totem de Autoatendimento"],
   ["Totem", "Leadster", "[LEADSTER] - LP Totem"],
   ["Totem", "Landing Page", "totem-de-autoatendimento"],
