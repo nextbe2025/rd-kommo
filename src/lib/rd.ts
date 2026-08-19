@@ -26,7 +26,7 @@ export type ParsedRdConversion = {
 const standardContactKeys = new Set([
   "uuid", "email", "name", "job_title", "bio", "website", "personal_phone",
   "mobile_phone", "city", "state", "facebook", "linkedin", "twitter", "tags",
-  "company", "lifecycle_stage", "opportunity", "contact_owner_email", "interest",
+  "company", "company_name", "empresa", "lifecycle_stage", "opportunity", "contact_owner_email", "interest",
   "fit", "origin", "legal_bases",
   "id", "created_at", "user", "first_conversion", "last_conversion",
   "number_conversions", "custom_fields",
@@ -59,7 +59,7 @@ export function parseRdWebhook(body: unknown): ParsedRdConversion {
     name: String(contact.name ?? contact.nome ?? "Contato RD").trim() || "Contato RD",
     email: normalizeEmail(contact.email),
     phone: normalizeBrazilPhone(contact.mobile_phone ?? contact.personal_phone ?? contact.phone ?? contact.telefone ?? contact.celular),
-    company: companyName(contact.company),
+    company: companyName(contact.company ?? contact.company_name ?? contact.empresa ?? contact.Empresa),
     origin: contact.origin ?? legacyOrigin(contact),
     customFields,
     rawKeys: Object.keys(contact).sort(),

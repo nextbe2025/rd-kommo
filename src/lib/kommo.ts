@@ -1,8 +1,9 @@
 import { normalizeText, phoneDigits } from "@/lib/normalize";
-import type { KommoContact, KommoCustomField, KommoFieldValue, KommoLead } from "@/lib/kommo-types";
+import type { KommoCompany, KommoContact, KommoCustomField, KommoFieldValue, KommoLead } from "@/lib/kommo-types";
 
 type Collection<T> = { _embedded?: Record<string, T[]> };
 type Pipeline = { id: number; name: string; _embedded?: { statuses?: Array<{ id: number; name: string }> } };
+type EntityLink = { to_entity_id: number; to_entity_type: string };
 
 export class KommoError extends Error {
   constructor(
@@ -98,6 +99,44 @@ export class KommoClient {
     }, 0, "atualizar contato");
   }
 
+  async findOrCreateCompany(name: string): Promise<KommoCompany> {
+    const normalizedName = normalizeText(name);
+    const data = await this.request<Collection<KommoCompany>>(
+      `/companies?limit=50&filter[name][]=${encodeURIComponent(name)}`,
+      {},
+      0,
+      "localizar empresa",
+    );
+    const existing = (data?._embedded?.companies ?? [])
+      .find((company) => normalizeText(company.name) === normalizedName);
+    if (existing) return existing;
+
+    const created = await this.request<Collection<KommoCompany>>("/companies", {
+      method: "POST",
+      body: JSON.stringify([{ name }]),
+    }, 0, "criar empresa");
+    const company = created?._embedded?.companies?.[0];
+    if (!company) throw new Error("A Kommo não retornou a empresa criada.");
+    return company;
+  }
+
+  async ensureCompanyLink(entity: "contacts" | "leads", entityId: number, companyId: number): Promise<void> {
+    const data = await this.request<Collection<EntityLink>>(
+      `/${entity}/${entityId}/links?filter[to_entity_type]=companies&filter[to_entity_id]=${companyId}`,
+      {},
+      0,
+      "consultar vínculo com empresa",
+    );
+    const linked = (data?._embedded?.links ?? [])
+      .some((link) => link.to_entity_type === "companies" && link.to_entity_id === companyId);
+    if (linked) return;
+
+    await this.request(`/${entity}/${entityId}/link`, {
+      method: "POST",
+      body: JSON.stringify([{ to_entity_id: companyId, to_entity_type: "companies" }]),
+    }, 0, "vincular empresa");
+  }
+
   async getLead(id: number): Promise<KommoLead | null> {
     return this.request<KommoLead>(`/leads/${id}`, {}, 0, "consultar oportunidade");
   }
@@ -118,6 +157,7 @@ export class KommoClient {
     pipelineId: number;
     statusId: number;
     contactId: number;
+    companyId?: number;
     tags: string[];
     customFields: KommoFieldValue[];
   }): Promise<KommoLead> {
@@ -132,6 +172,7 @@ export class KommoClient {
           custom_fields_values: input.customFields,
           _embedded: {
             contacts: [{ id: input.contactId, is_main: true }],
+            ...(input.companyId ? { companies: [{ id: input.companyId }] } : {}),
             tags: input.tags.map((name) => ({ name })),
           },
         }]),

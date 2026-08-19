@@ -26,6 +26,20 @@ describe("payload do RD", () => {
     expect(() => parseRdWebhook({ event_identifier: "evento" })).toThrow("sem o objeto contact");
   });
 
+  it("extrai o nome da empresa do campo padrão ou dos aliases do formulário", () => {
+    const parsed = parseRdWebhook({
+      event_identifier: "comandas-geral",
+      contact: {
+        name: "Contato Teste",
+        email: "teste@exemplo.com",
+        company_name: "Restaurante Exemplo",
+      },
+    });
+
+    expect(parsed.company).toBe("Restaurante Exemplo");
+    expect(parsed.customFields).not.toHaveProperty("company_name");
+  });
+
   it("abre o envelope legado enviado pelos fluxos de automação", () => {
     const contact = unwrapRdAutomationPayload({
       leads: [{

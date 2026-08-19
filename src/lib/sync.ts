@@ -40,13 +40,20 @@ export async function syncConversion(conversion: ParsedRdConversion) {
   if (contact) await kommo.updateContact(contact.id, conversion.name, conversion.phone, conversion.email);
   else contact = await kommo.createContact(conversion.name, conversion.phone, conversion.email);
 
+  const company = conversion.company
+    ? await kommo.findOrCreateCompany(conversion.company)
+    : undefined;
+  if (company) await kommo.ensureCompanyLink("contacts", contact.id, company.id);
+
   const existing = await kommo.findOpenProductLead(contact, pipelineId, route.product);
   if (existing) {
     await kommo.updateLead(existing.id, statusId, mapped.fields, route.tags);
+    if (company) await kommo.ensureCompanyLink("leads", existing.id, company.id);
     return {
       status: "updated" as const,
       contactId: contact.id,
       leadId: existing.id,
+      companyId: company?.id,
       mappedFields: mapped.mappedFields,
       warnings: mapped.warnings,
     };
@@ -57,6 +64,7 @@ export async function syncConversion(conversion: ParsedRdConversion) {
     pipelineId,
     statusId,
     contactId: contact.id,
+    companyId: company?.id,
     tags: route.tags,
     customFields: mapped.fields,
   });
@@ -64,6 +72,7 @@ export async function syncConversion(conversion: ParsedRdConversion) {
     status: "created" as const,
     contactId: contact.id,
     leadId: lead.id,
+    companyId: company?.id,
     mappedFields: mapped.mappedFields,
     warnings: mapped.warnings,
   };
