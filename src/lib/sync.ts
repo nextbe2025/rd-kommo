@@ -38,7 +38,12 @@ export async function syncConversion(conversion: ParsedRdConversion) {
 
   let contact = await kommo.findContact(conversion.phone, conversion.email);
   if (contact) await kommo.updateContact(contact.id, conversion.name, conversion.phone, conversion.email);
-  else contact = await kommo.createContact(conversion.name, conversion.phone, conversion.email);
+  else contact = await kommo.createContact(
+    conversion.name,
+    conversion.phone,
+    conversion.email,
+    route.responsibleUserId,
+  );
 
   const company = conversion.company
     ? await kommo.findOrCreateCompany(conversion.company)
@@ -65,6 +70,7 @@ export async function syncConversion(conversion: ParsedRdConversion) {
     statusId,
     contactId: contact.id,
     companyId: company?.id,
+    responsibleUserId: route.responsibleUserId,
     tags: route.tags,
     customFields: mapped.fields,
   });

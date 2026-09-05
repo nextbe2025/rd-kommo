@@ -2,6 +2,13 @@ import { describe, expect, it } from "vitest";
 import { routeForEvent } from "../src/config/products";
 
 describe("rotas dos fluxos de automação RD", () => {
+  it("atribui imediatamente os novos leads Nextcard à Fernanda", () => {
+    expect(routeForEvent("totem-geral")?.responsibleUserId).toBe(15686199);
+    expect(routeForEvent("catracas-geral")?.responsibleUserId).toBe(15686199);
+    expect(routeForEvent("comandas-geral")?.responsibleUserId).toBe(15686199);
+    expect(routeForEvent("teloos-geral")?.responsibleUserId).toBeUndefined();
+  });
+
   it("separa as três origens do Totem", () => {
     expect(routeForEvent("totem-site")?.source).toBe("Site");
     expect(routeForEvent("totem-leadster")?.source).toBe("Leadster");

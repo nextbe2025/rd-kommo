@@ -6,12 +6,16 @@ export type ProductRoute = {
   pipelineName: string;
   stageName: string;
   tags: string[];
+  responsibleUserId?: number;
 };
 
 const pipelineName = process.env.KOMMO_PIPELINE_NAME || "Funil Nextcard";
 const stageName = process.env.KOMMO_ENTRY_STAGE_NAME || "NOVOS LEADS RD";
 const teloosPipelineName = process.env.KOMMO_TELOOS_PIPELINE_NAME || "Funil Teloos";
 const teloosStageName = process.env.KOMMO_TELOOS_ENTRY_STAGE_NAME || "NOVOS LEADS RD";
+const nextcardResponsibleUserId = positiveInteger(
+  process.env.KOMMO_NEXTCARD_RESPONSIBLE_USER_ID || "15686199",
+);
 
 export const productRoutes: Record<string, ProductRoute> = {
   "nextcard-contato-site": {
@@ -220,5 +224,13 @@ export const productRoutes: Record<string, ProductRoute> = {
 };
 
 export function routeForEvent(eventIdentifier: string): ProductRoute | undefined {
-  return productRoutes[eventIdentifier.trim()];
+  const route = productRoutes[eventIdentifier.trim()];
+  if (!route) return undefined;
+  if (route.pipelineName !== pipelineName) return route;
+  return { ...route, responsibleUserId: nextcardResponsibleUserId };
+}
+
+function positiveInteger(value: string): number | undefined {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : undefined;
 }

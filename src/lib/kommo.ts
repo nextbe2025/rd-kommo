@@ -81,11 +81,15 @@ export class KommoClient {
     return undefined;
   }
 
-  async createContact(name: string, phone?: string, email?: string): Promise<KommoContact> {
+  async createContact(name: string, phone?: string, email?: string, responsibleUserId?: number): Promise<KommoContact> {
     const customFields = contactFieldValues(phone, email);
     const data = await this.request<Collection<KommoContact>>("/contacts", {
       method: "POST",
-      body: JSON.stringify([{ name, custom_fields_values: customFields }]),
+      body: JSON.stringify([{
+        name,
+        custom_fields_values: customFields,
+        ...(responsibleUserId ? { responsible_user_id: responsibleUserId } : {}),
+      }]),
     }, 0, "criar contato");
     const contact = data?._embedded?.contacts?.[0];
     if (!contact) throw new Error("A Kommo não retornou o contato criado.");
@@ -158,6 +162,7 @@ export class KommoClient {
     statusId: number;
     contactId: number;
     companyId?: number;
+    responsibleUserId?: number;
     tags: string[];
     customFields: KommoFieldValue[];
   }): Promise<KommoLead> {
@@ -169,6 +174,7 @@ export class KommoClient {
           name: input.name,
           pipeline_id: input.pipelineId,
           status_id: input.statusId,
+          ...(input.responsibleUserId ? { responsible_user_id: input.responsibleUserId } : {}),
           custom_fields_values: input.customFields,
           _embedded: {
             contacts: [{ id: input.contactId, is_main: true }],
