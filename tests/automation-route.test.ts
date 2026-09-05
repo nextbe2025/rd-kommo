@@ -6,7 +6,7 @@ describe("rotas dos fluxos de automação RD", () => {
     expect(routeForEvent("totem-geral")?.responsibleUserId).toBe(15686199);
     expect(routeForEvent("catracas-geral")?.responsibleUserId).toBe(15686199);
     expect(routeForEvent("comandas-geral")?.responsibleUserId).toBe(15686199);
-    expect(routeForEvent("teloos-geral")?.responsibleUserId).toBeUndefined();
+    expect(routeForEvent("teloos-geral")?.responsibleUserId).toBe(15686231);
   });
 
   it("separa as três origens do Totem", () => {

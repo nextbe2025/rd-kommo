@@ -16,6 +16,9 @@ const teloosStageName = process.env.KOMMO_TELOOS_ENTRY_STAGE_NAME || "NOVOS LEAD
 const nextcardResponsibleUserId = positiveInteger(
   process.env.KOMMO_NEXTCARD_RESPONSIBLE_USER_ID || "15686199",
 );
+const teloosResponsibleUserId = positiveInteger(
+  process.env.KOMMO_TELOOS_RESPONSIBLE_USER_ID || "15686231",
+);
 
 export const productRoutes: Record<string, ProductRoute> = {
   "nextcard-contato-site": {
@@ -226,8 +229,13 @@ export const productRoutes: Record<string, ProductRoute> = {
 export function routeForEvent(eventIdentifier: string): ProductRoute | undefined {
   const route = productRoutes[eventIdentifier.trim()];
   if (!route) return undefined;
-  if (route.pipelineName !== pipelineName) return route;
-  return { ...route, responsibleUserId: nextcardResponsibleUserId };
+  if (route.pipelineName === pipelineName) {
+    return { ...route, responsibleUserId: nextcardResponsibleUserId };
+  }
+  if (route.pipelineName === teloosPipelineName) {
+    return { ...route, responsibleUserId: teloosResponsibleUserId };
+  }
+  return route;
 }
 
 function positiveInteger(value: string): number | undefined {

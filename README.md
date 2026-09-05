@@ -81,6 +81,7 @@ O serviço nunca registra nome, e-mail, telefone ou os valores dos campos person
 - Uma oportunidade Teloos aberta no Funil Teloos é atualizada.
 - Sem oportunidade aberta, uma nova é criada em `NOVOS LEADS RD`.
 - Novas oportunidades do Funil Nextcard já são atribuídas à Fernanda (`KOMMO_NEXTCARD_RESPONSIBLE_USER_ID`), sem esperar resposta do lead ou execução do Salesbot.
+- Novas oportunidades do Funil Teloos já são atribuídas à Luana (`KOMMO_TELOOS_RESPONSIBLE_USER_ID`) nas mesmas condições.
 - Campos personalizados são encontrados pelo nome; campos ausentes geram aviso sem bloquear o lead.
 - O campo `Foco do Cliente` recebe `Totem`, `Catraca`, `Comanda` ou `Teloos`, conforme o produto.
 - No formulário geral da Nextcard, `De qual Estado você é?` também corresponde ao campo `De qual Estado você fala?` da Kommo.
