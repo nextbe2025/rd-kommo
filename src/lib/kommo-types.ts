@@ -32,8 +32,3 @@ export type KommoCompany = {
   id: number;
   name: string;
 };
-
-export type KommoUser = {
-  id: number;
-  name: string;
-};

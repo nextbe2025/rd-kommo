@@ -22,11 +22,7 @@ export async function syncConversion(conversion: ParsedRdConversion) {
     route.mapPartnerFields ? kommo.getCustomFields("companies") : Promise.resolve([]),
   ]);
 
-  const responsibleUserId = route.responsibleUserId ?? (
-    route.responsibleUserName
-      ? await kommo.resolveUserId(route.responsibleUserName)
-      : undefined
-  );
+  const responsibleUserId = route.responsibleUserId;
 
   const origin = readableOrigin(conversion.origin);
   const utms = originFields(conversion.origin);

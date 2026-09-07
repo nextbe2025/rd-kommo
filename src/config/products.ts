@@ -7,7 +7,6 @@ export type ProductRoute = {
   stageName: string;
   tags: string[];
   responsibleUserId?: number;
-  responsibleUserName?: string;
   mapPartnerFields?: boolean;
 };
 
@@ -23,7 +22,9 @@ const teloosResponsibleUserId = positiveInteger(
 );
 const partnershipsPipelineName = process.env.KOMMO_PARTNERSHIPS_PIPELINE_NAME || "Funil Parcerias";
 const partnershipsStageName = process.env.KOMMO_PARTNERSHIPS_ENTRY_STAGE_NAME || "Novos Leads RD";
-const partnershipsResponsibleUserName = process.env.KOMMO_PARTNERSHIPS_RESPONSIBLE_USER_NAME || "Luciana França";
+const partnershipsResponsibleUserId = positiveInteger(
+  process.env.KOMMO_PARTNERSHIPS_RESPONSIBLE_USER_ID || "15712063",
+);
 
 export const productRoutes: Record<string, ProductRoute> = {
   "nextcard-contato-site": {
@@ -235,7 +236,7 @@ export const productRoutes: Record<string, ProductRoute> = {
     pipelineName: partnershipsPipelineName,
     stageName: partnershipsStageName,
     tags: ["RD", "Parcerias"],
-    responsibleUserName: partnershipsResponsibleUserName,
+    responsibleUserId: partnershipsResponsibleUserId,
     mapPartnerFields: true,
   },
   "parceiros-revenda": {
@@ -244,7 +245,7 @@ export const productRoutes: Record<string, ProductRoute> = {
     pipelineName: partnershipsPipelineName,
     stageName: partnershipsStageName,
     tags: ["RD", "Parcerias", "LP"],
-    responsibleUserName: partnershipsResponsibleUserName,
+    responsibleUserId: partnershipsResponsibleUserId,
     mapPartnerFields: true,
   },
 };

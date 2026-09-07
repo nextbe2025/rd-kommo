@@ -113,7 +113,7 @@ describe("rotas dos fluxos de automação RD", () => {
       pipelineName: "Funil Parcerias",
       stageName: "Novos Leads RD",
       tags: ["RD", "Parcerias", "LP"],
-      responsibleUserName: "Luciana França",
+      responsibleUserId: 15712063,
       mapPartnerFields: true,
     });
   });

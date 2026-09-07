@@ -1,5 +1,5 @@
 import { normalizeText, phoneDigits } from "@/lib/normalize";
-import type { KommoCompany, KommoContact, KommoCustomField, KommoFieldValue, KommoLead, KommoUser } from "@/lib/kommo-types";
+import type { KommoCompany, KommoContact, KommoCustomField, KommoFieldValue, KommoLead } from "@/lib/kommo-types";
 
 type Collection<T> = { _embedded?: Record<string, T[]> };
 type Pipeline = { id: number; name: string; _embedded?: { statuses?: Array<{ id: number; name: string }> } };
@@ -69,14 +69,6 @@ export class KommoClient {
   async getCustomFields(entity: "leads" | "contacts" | "companies"): Promise<KommoCustomField[]> {
     const data = await this.request<Collection<KommoCustomField>>(`/${entity}/custom_fields?limit=250`, {}, 0, `consultar campos de ${entity}`);
     return data?._embedded?.custom_fields ?? [];
-  }
-
-  async resolveUserId(userName: string): Promise<number> {
-    const data = await this.request<Collection<KommoUser>>("/users?limit=250", {}, 0, "consultar usuários");
-    const user = (data?._embedded?.users ?? [])
-      .find((item) => normalizeText(item.name) === normalizeText(userName));
-    if (!user) throw new Error(`Usuário da Kommo não encontrado: ${userName}`);
-    return user.id;
   }
 
   async findContact(phone?: string, email?: string): Promise<KommoContact | undefined> {
