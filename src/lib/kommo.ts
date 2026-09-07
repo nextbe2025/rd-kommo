@@ -1,5 +1,5 @@
 import { normalizeText, phoneDigits } from "@/lib/normalize";
-import type { KommoCompany, KommoContact, KommoCustomField, KommoFieldValue, KommoLead } from "@/lib/kommo-types";
+import type { KommoCompany, KommoContact, KommoCustomField, KommoFieldValue, KommoLead, KommoUser } from "@/lib/kommo-types";
 
 type Collection<T> = { _embedded?: Record<string, T[]> };
 type Pipeline = { id: number; name: string; _embedded?: { statuses?: Array<{ id: number; name: string }> } };
@@ -66,9 +66,17 @@ export class KommoClient {
     return { pipelineId: pipeline.id, statusId: stage.id };
   }
 
-  async getCustomFields(entity: "leads" | "contacts"): Promise<KommoCustomField[]> {
+  async getCustomFields(entity: "leads" | "contacts" | "companies"): Promise<KommoCustomField[]> {
     const data = await this.request<Collection<KommoCustomField>>(`/${entity}/custom_fields?limit=250`, {}, 0, `consultar campos de ${entity}`);
     return data?._embedded?.custom_fields ?? [];
+  }
+
+  async resolveUserId(userName: string): Promise<number> {
+    const data = await this.request<Collection<KommoUser>>("/users?limit=250", {}, 0, "consultar usuários");
+    const user = (data?._embedded?.users ?? [])
+      .find((item) => normalizeText(item.name) === normalizeText(userName));
+    if (!user) throw new Error(`Usuário da Kommo não encontrado: ${userName}`);
+    return user.id;
   }
 
   async findContact(phone?: string, email?: string): Promise<KommoContact | undefined> {
@@ -81,8 +89,14 @@ export class KommoClient {
     return undefined;
   }
 
-  async createContact(name: string, phone?: string, email?: string, responsibleUserId?: number): Promise<KommoContact> {
-    const customFields = contactFieldValues(phone, email);
+  async createContact(
+    name: string,
+    phone?: string,
+    email?: string,
+    responsibleUserId?: number,
+    extraCustomFields: KommoFieldValue[] = [],
+  ): Promise<KommoContact> {
+    const customFields = [...contactFieldValues(phone, email), ...extraCustomFields];
     const data = await this.request<Collection<KommoContact>>("/contacts", {
       method: "POST",
       body: JSON.stringify([{
@@ -96,14 +110,23 @@ export class KommoClient {
     return contact;
   }
 
-  async updateContact(id: number, name: string, phone?: string, email?: string): Promise<void> {
+  async updateContact(
+    id: number,
+    name: string,
+    phone?: string,
+    email?: string,
+    extraCustomFields: KommoFieldValue[] = [],
+  ): Promise<void> {
     await this.request(`/contacts/${id}`, {
       method: "PATCH",
-      body: JSON.stringify({ name, custom_fields_values: contactFieldValues(phone, email) }),
+      body: JSON.stringify({
+        name,
+        custom_fields_values: [...contactFieldValues(phone, email), ...extraCustomFields],
+      }),
     }, 0, "atualizar contato");
   }
 
-  async findOrCreateCompany(name: string): Promise<KommoCompany> {
+  async findOrCreateCompany(name: string, customFields: KommoFieldValue[] = []): Promise<KommoCompany> {
     const normalizedName = normalizeText(name);
     const data = await this.request<Collection<KommoCompany>>(
       `/companies?limit=50&filter[name][]=${encodeURIComponent(name)}`,
@@ -113,11 +136,22 @@ export class KommoClient {
     );
     const existing = (data?._embedded?.companies ?? [])
       .find((company) => normalizeText(company.name) === normalizedName);
-    if (existing) return existing;
+    if (existing) {
+      if (customFields.length) {
+        await this.request(`/companies/${existing.id}`, {
+          method: "PATCH",
+          body: JSON.stringify({ custom_fields_values: customFields }),
+        }, 0, "atualizar empresa");
+      }
+      return existing;
+    }
 
     const created = await this.request<Collection<KommoCompany>>("/companies", {
       method: "POST",
-      body: JSON.stringify([{ name }]),
+      body: JSON.stringify([{
+        name,
+        ...(customFields.length ? { custom_fields_values: customFields } : {}),
+      }]),
     }, 0, "criar empresa");
     const company = created?._embedded?.companies?.[0];
     if (!company) throw new Error("A Kommo não retornou a empresa criada.");

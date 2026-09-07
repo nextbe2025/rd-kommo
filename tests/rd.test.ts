@@ -57,4 +57,19 @@ describe("payload do RD", () => {
     expect(parsed.origin).toBe("Tráfego Direto");
     expect(parsed.customFields.cf_quantas_unidades_possui).toBe("4 a 10");
   });
+
+  it("extrai cidade e estado padrão para os dados da empresa", () => {
+    const parsed = parseRdWebhook({
+      event_identifier: "parceiros-revenda",
+      contact: {
+        name: "Parceiro Teste",
+        email: "parceiro@exemplo.com",
+        city: "Curitiba",
+        state: "PR",
+      },
+    });
+
+    expect(parsed.city).toBe("Curitiba");
+    expect(parsed.state).toBe("PR");
+  });
 });

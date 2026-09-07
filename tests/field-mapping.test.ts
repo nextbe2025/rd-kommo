@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildLeadCustomFields } from "../src/lib/field-mapping";
+import { buildLeadCustomFields, buildNamedCustomFields } from "../src/lib/field-mapping";
 
 describe("mapeamento dos campos da oportunidade", () => {
   it("mapeia Foco do Cliente para uma opção da Kommo", () => {
@@ -74,5 +74,23 @@ describe("mapeamento dos campos da oportunidade", () => {
       field_id: 789,
       values: [{ value: "Quero conhecer a solução" }],
     });
+  });
+
+  it("mapeia CNPJ, cidade e estado nos campos da entidade", () => {
+    const result = buildNamedCustomFields([
+      { id: 1, name: "CNPJ", type: "text" },
+      { id: 2, name: "Cidade", type: "text" },
+      { id: 3, name: "Estado", type: "text" },
+    ], [
+      { names: ["CNPJ"], value: "30119930000120" },
+      { names: ["Cidade"], value: "Curitiba" },
+      { names: ["Estado"], value: "PR" },
+    ]);
+
+    expect(result.fields).toEqual([
+      { field_id: 1, values: [{ value: "30119930000120" }] },
+      { field_id: 2, values: [{ value: "Curitiba" }] },
+      { field_id: 3, values: [{ value: "PR" }] },
+    ]);
   });
 });

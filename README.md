@@ -19,6 +19,7 @@ Recebe conversões do RD Station Marketing e cria ou atualiza contatos e oportun
 | `Formulário de Contato - Site Teloos` | Site | Teloos | Funil Teloos |
 | `[LEADSTER] - Site Teloos` | Leadster | Teloos | Funil Teloos |
 | `Formulário Contato Site` | Site | Contato geral Nextcard | Funil Nextcard |
+| `parceiros-revenda` | Landing Page | Parceria/Revenda | Funil Parcerias |
 
 Etapa de entrada: `NOVOS LEADS RD`.
 
@@ -46,6 +47,7 @@ Geral:    /api/webhooks/rd?secret=SEGREDO&route=totem-geral
 Catracas: /api/webhooks/rd?secret=SEGREDO&route=catracas-geral
 Comandas: /api/webhooks/rd?secret=SEGREDO&route=comandas-geral
 Teloos:   /api/webhooks/rd?secret=SEGREDO&route=teloos-geral
+Parcerias: /api/webhooks/rd?secret=SEGREDO&route=parcerias-geral
 Contato Nextcard: /api/webhooks/rd?secret=SEGREDO&route=nextcard-contato-site
 ```
 
@@ -56,6 +58,7 @@ https://rd-kommo.vercel.app/api/webhooks/rd/totem-geral/SEGREDO
 https://rd-kommo.vercel.app/api/webhooks/rd/catracas-geral/SEGREDO
 https://rd-kommo.vercel.app/api/webhooks/rd/comandas-geral/SEGREDO
 https://rd-kommo.vercel.app/api/webhooks/rd/teloos-geral/SEGREDO
+https://rd-kommo.vercel.app/api/webhooks/rd/parcerias-geral/SEGREDO
 https://rd-kommo.vercel.app/api/webhooks/rd/nextcard-contato-site/SEGREDO
 ```
 
@@ -82,6 +85,7 @@ O serviço nunca registra nome, e-mail, telefone ou os valores dos campos person
 - Sem oportunidade aberta, uma nova é criada em `NOVOS LEADS RD`.
 - Novas oportunidades do Funil Nextcard já são atribuídas à Fernanda (`KOMMO_NEXTCARD_RESPONSIBLE_USER_ID`), sem esperar resposta do lead ou execução do Salesbot.
 - Novas oportunidades do Funil Teloos já são atribuídas à Luana (`KOMMO_TELOOS_RESPONSIBLE_USER_ID`) nas mesmas condições.
+- Leads de `parceiros-revenda` entram no Funil Parcerias, etapa `Novos Leads RD`, atribuídos à Luciana França e sem alterar `Foco do Cliente`.
 - Campos personalizados são encontrados pelo nome; campos ausentes geram aviso sem bloquear o lead.
 - O campo `Foco do Cliente` recebe `Totem`, `Catraca`, `Comanda` ou `Teloos`, conforme o produto.
 - No formulário geral da Nextcard, `De qual Estado você é?` também corresponde ao campo `De qual Estado você fala?` da Kommo.

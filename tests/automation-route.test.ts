@@ -105,4 +105,16 @@ describe("rotas dos fluxos de automação RD", () => {
       tags: ["RD", "Teloos"],
     });
   });
+
+  it("envia parceiros-revenda para o Funil Parcerias sem foco do cliente", () => {
+    expect(routeForEvent("parceiros-revenda")).toMatchObject({
+      product: "Parceria/Revenda",
+      source: "Landing Page",
+      pipelineName: "Funil Parcerias",
+      stageName: "Novos Leads RD",
+      tags: ["RD", "Parcerias", "LP"],
+      responsibleUserName: "Luciana França",
+      mapPartnerFields: true,
+    });
+  });
 });

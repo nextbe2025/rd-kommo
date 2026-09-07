@@ -12,6 +12,7 @@ const events = [
   ["Comandas", "Meta Ads", "[META LEADS ADS] - COMANDAS"],
   ["Teloos", "Site", "Formulário de Contato - Site Teloos"],
   ["Teloos", "Leadster", "[LEADSTER] - Site Teloos"],
+  ["Parcerias", "Landing Page", "parceiros-revenda"],
 ];
 
 export default function Home() {

@@ -1,5 +1,5 @@
 import { routeForEvent } from "@/config/products";
-import { buildLeadCustomFields } from "@/lib/field-mapping";
+import { buildLeadCustomFields, buildNamedCustomFields } from "@/lib/field-mapping";
 import { KommoClient } from "@/lib/kommo";
 import type { ParsedRdConversion } from "@/lib/rd";
 
@@ -15,14 +15,35 @@ export async function syncConversion(conversion: ParsedRdConversion) {
   if (!subdomain || !token) throw new Error("KOMMO_SUBDOMAIN ou KOMMO_LONG_LIVED_TOKEN não configurado.");
 
   const kommo = new KommoClient(token, subdomain);
-  const [{ pipelineId, statusId }, leadFields] = await Promise.all([
+  const [{ pipelineId, statusId }, leadFields, contactFields, companyFields] = await Promise.all([
     kommo.resolvePipeline(route.pipelineName, route.stageName),
     kommo.getCustomFields("leads"),
+    route.mapPartnerFields ? kommo.getCustomFields("contacts") : Promise.resolve([]),
+    route.mapPartnerFields ? kommo.getCustomFields("companies") : Promise.resolve([]),
   ]);
+
+  const responsibleUserId = route.responsibleUserId ?? (
+    route.responsibleUserName
+      ? await kommo.resolveUserId(route.responsibleUserName)
+      : undefined
+  );
 
   const origin = readableOrigin(conversion.origin);
   const utms = originFields(conversion.origin);
   const idFromCustomFields = findCustomValue(conversion.customFields, ["id da conversao", "conversion id", "id conversao"]);
+  const cnpj = findCustomValue(conversion.customFields, ["cnpj"]);
+  const contactMapped = route.mapPartnerFields
+    ? buildNamedCustomFields(contactFields, [
+      { names: ["CNPJ"], value: cnpj },
+    ])
+    : emptyFieldMapping();
+  const companyMapped = route.mapPartnerFields
+    ? buildNamedCustomFields(companyFields, [
+      { names: ["CNPJ"], value: cnpj },
+      { names: ["Cidade"], value: conversion.city },
+      { names: ["Estado"], value: conversion.state },
+    ])
+    : emptyFieldMapping();
   const mapped = buildLeadCustomFields(leadFields, {
     product: route.product,
     focus: customerFocus(route.product),
@@ -37,16 +58,25 @@ export async function syncConversion(conversion: ParsedRdConversion) {
   });
 
   let contact = await kommo.findContact(conversion.phone, conversion.email);
-  if (contact) await kommo.updateContact(contact.id, conversion.name, conversion.phone, conversion.email);
+  if (contact) {
+    await kommo.updateContact(
+      contact.id,
+      conversion.name,
+      conversion.phone,
+      conversion.email,
+      contactMapped.fields,
+    );
+  }
   else contact = await kommo.createContact(
     conversion.name,
     conversion.phone,
     conversion.email,
-    route.responsibleUserId,
+    responsibleUserId,
+    contactMapped.fields,
   );
 
   const company = conversion.company
-    ? await kommo.findOrCreateCompany(conversion.company)
+    ? await kommo.findOrCreateCompany(conversion.company, companyMapped.fields)
     : undefined;
   if (company) await kommo.ensureCompanyLink("contacts", contact.id, company.id);
 
@@ -60,7 +90,9 @@ export async function syncConversion(conversion: ParsedRdConversion) {
       leadId: existing.id,
       companyId: company?.id,
       mappedFields: mapped.mappedFields,
-      warnings: mapped.warnings,
+      mappedContactFields: contactMapped.mappedFields,
+      mappedCompanyFields: companyMapped.mappedFields,
+      warnings: [...mapped.warnings, ...contactMapped.warnings, ...companyMapped.warnings],
     };
   }
 
@@ -70,7 +102,7 @@ export async function syncConversion(conversion: ParsedRdConversion) {
     statusId,
     contactId: contact.id,
     companyId: company?.id,
-    responsibleUserId: route.responsibleUserId,
+    responsibleUserId,
     tags: route.tags,
     customFields: mapped.fields,
   });
@@ -80,7 +112,9 @@ export async function syncConversion(conversion: ParsedRdConversion) {
     leadId: lead.id,
     companyId: company?.id,
     mappedFields: mapped.mappedFields,
-    warnings: mapped.warnings,
+    mappedContactFields: contactMapped.mappedFields,
+    mappedCompanyFields: companyMapped.mappedFields,
+    warnings: [...mapped.warnings, ...contactMapped.warnings, ...companyMapped.warnings],
   };
 }
 
@@ -124,4 +158,12 @@ function findCustomValue(fields: Record<string, unknown>, aliases: string[]): un
     if (aliases.some((alias) => normalized.includes(alias))) return value;
   }
   return undefined;
+}
+
+function emptyFieldMapping() {
+  return {
+    fields: [],
+    mappedFields: [],
+    warnings: [],
+  };
 }

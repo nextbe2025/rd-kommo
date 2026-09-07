@@ -18,6 +18,8 @@ export type ParsedRdConversion = {
   email?: string;
   phone?: string;
   company?: string;
+  city?: string;
+  state?: string;
   origin?: unknown;
   customFields: Record<string, unknown>;
   rawKeys: string[];
@@ -60,6 +62,8 @@ export function parseRdWebhook(body: unknown): ParsedRdConversion {
     email: normalizeEmail(contact.email),
     phone: normalizeBrazilPhone(contact.mobile_phone ?? contact.personal_phone ?? contact.phone ?? contact.telefone ?? contact.celular),
     company: companyName(contact.company ?? contact.company_name ?? contact.empresa ?? contact.Empresa),
+    city: textValue(contact.city ?? contact.cidade ?? contact.Cidade),
+    state: textValue(contact.state ?? contact.estado ?? contact.Estado),
     origin: contact.origin ?? legacyOrigin(contact),
     customFields,
     rawKeys: Object.keys(contact).sort(),
@@ -101,6 +105,11 @@ function companyName(company: unknown): string | undefined {
     return name || undefined;
   }
   return undefined;
+}
+
+function textValue(value: unknown): string | undefined {
+  const text = String(value ?? "").trim();
+  return text || undefined;
 }
 
 function legacyOrigin(contact: Record<string, unknown>): unknown {

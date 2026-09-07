@@ -82,6 +82,35 @@ export function buildLeadCustomFields(fields: KommoCustomField[], data: Semantic
   return { fields: output, mappedFields, warnings };
 }
 
+export type NamedFieldInput = {
+  names: string[];
+  value: unknown;
+};
+
+export function buildNamedCustomFields(fields: KommoCustomField[], inputs: NamedFieldInput[]) {
+  const output: KommoFieldValue[] = [];
+  const mappedFields: Array<{ id: number; name: string; type: string }> = [];
+  const warnings: string[] = [];
+
+  for (const input of inputs) {
+    if (input.value === undefined || input.value === null || input.value === "") continue;
+    const field = findField(fields, input.names);
+    if (!field) {
+      warnings.push(`Campo não encontrado na Kommo: ${input.names[0]}`);
+      continue;
+    }
+    const mapped = toFieldValue(field, input.value);
+    if (!mapped) {
+      warnings.push(`Valor não compatível com ${field.name}: ${String(input.value)}`);
+      continue;
+    }
+    output.push(mapped);
+    mappedFields.push({ id: field.id, name: field.name, type: field.type });
+  }
+
+  return { fields: output, mappedFields, warnings };
+}
+
 function findField(fields: KommoCustomField[], names: string[]): KommoCustomField | undefined {
   const normalized = names.map(normalizeText);
   return fields.find((field) => normalized.includes(normalizeText(field.name)) || (field.code && normalized.includes(normalizeText(field.code))));
